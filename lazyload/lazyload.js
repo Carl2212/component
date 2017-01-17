@@ -2,6 +2,7 @@
  * Created by wxh on 2016/4/16.
  * 插件作用：
  * 延时加载图片 并在加载结束后执行函数
+ * 懒加载 需要引入jquery
  */
 (function($){
     $.fn.lazyload = function(option){

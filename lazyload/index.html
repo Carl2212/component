@@ -6,35 +6,53 @@
 </head>
 <style>
     .img-group {
-        margn : 0 auto;
+        margin : 10px auto;
         width : 80%;
+        height : 150px;
         border : 1px solid #eee;
+    }
+    .img-group img{
+        display: block;
+        margin: 0 auto;
+        margin-top : 25px;
+        height:100px
     }
 </style>
 <body>
     <div class="img-group">
-        <img src="./placeholder.png" data-src="./sources/1.png">
+        <img src="./placeholder.png" data-src="./sources/1.jpg">
     </div>
     <div class="img-group">
-        <img src="./placeholder.png" data-src="./sources/2.png">
+        <img src="./placeholder.png" data-src="./sources/2.jpg">
     </div>
     <div class="img-group">
-        <img src="./placeholder.png" data-src="./sources/3.png">
+        <img src="./placeholder.png" data-src="./sources/3.jpg">
     </div>
     <div class="img-group">
-        <img src="./placeholder.png" data-src="./sources/4.png">
+        <img src="./placeholder.png" data-src="./sources/4.jpg">
     </div>
     <div class="img-group">
-        <img src="./placeholder.png" data-src="./sources/5.png">
+        <img src="./placeholder.png" data-src="./sources/5.jpg">
     </div>
     <div class="img-group">
-        <img src="./placeholder.png" data-src="./sources/6.png">
+        <img src="./placeholder.png" data-src="./sources/6.jpg">
     </div>
     <div class="img-group">
-        <img src="./placeholder.png" data-src="./sources/7.png">
+        <img src="./placeholder.png" data-src="./sources/7.jpg">
     </div>
     <div class="img-group">
-        <img src="./placeholder.png" data-src="./sources/8.png">
+        <img src="./placeholder.png" data-src="./sources/8.jpg">
     </div>
 </body>
+<script src="lazyload2.js" type="text/javascript"></script>
+<script>
+    var lzy = new lazyload('.img-group',{
+        callback : function(){
+            console.log('....................');
+        }
+    }).pause();
+    setTimeout(function() {
+        lzy.restart();
+    },1500);
+</script>
 </html>

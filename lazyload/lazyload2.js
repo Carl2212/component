@@ -4,16 +4,18 @@
  */
 (function(window,underfined){
 
+    umd('lazyload',lazyload);
+    lazyload.SENCER = 30;
     //声明
     function lazyload(elem , option) {
         //当前类型是选择器
         this.elem = typeof elem == 'string' ? $(elem) : elem;
-
-
-        this.lazy_src ="data-src",
-        this.img_id =false,//图片加载之后id
-        this.callback = false,//图片加载之后执行函数
-        this.distance = false//false为对象下全部图片进行加载。否则加载距离可视区域内xpx的图片
+        console.log(elem);
+        this.tag="data-src";
+        this.img_id =false;//图片加载之后id
+        this.callback = false;//图片加载之后执行函数
+        this.distance = 0;//加载距离可视区域内xpx的图片
+        this._pause = false;
 
         var option = option || [];
         for(var i in option) {
@@ -25,22 +27,91 @@
         },4);
     }
     lazyload.prototype.init = function() {
+        this._detectElementIFInScreen();
 
+        var timer;
+        var me = this;
+        addEventListener('scroll',function(){
+            //清除还未开始的加载保证性能
+            timer && clearTimeout(timer);
+            setTimeout(function(){
+                me._detectElementIFInScreen();
+            },lazyload.SENCER);
+        });
+        addEventListener('resize', function () {
+            //清除还未开始的加载保证性能
+            timer && clearTimeout(timer);
+            setTimeout(function(){
+                me._detectElementIFInScreen();
+            },lazyload.SENCER);
+        });
 
+    }
+
+    lazyload.prototype.pause = function() {
+        this._pause = true;
+        return this;
+    }
+    lazyload.prototype.restart = function() {
+        this._pause = false;
+        this._detectElementIFInScreen();
+        return this;
     }
 
     lazyload.prototype._detectElementIFInScreen = function() {
-
+        if(!this.elem.length || this._pause) {
+            this._pause = false ;
+            return;
+        }
+        var H = window.innerHeight || document.documentElement.clientHeight;
+        var W = window.innerWidth || document.documentElement.clientWidth;
+        console.log(this.elem);
+        for(var i = 0 ,len =this.elem.length ; i < len ; i++ ) {
+            var elem = this.elem[i];
+            var rect = elem.getBoundingClientRect();
+            console.log(rect);
+            if((rect.left >= this.distance && rect.top >= this.distance
+                    ||rect.top < 0 && (rect.top+this.elem.height) >= this.distance
+                    ||rect.left < 0 && (rect.left+this.elem.width) >= this.distance
+                )&& rect.top <= H && rect.left <= W) {
+                this.loadItems(elem);
+                this.elem.splice(i,1);
+                i--;len--;
+            }
+        }
+        //全部图片加载完 回调
+        if(!this.elem.length) {
+            this.callback && this.callback();
+        }
     }
 
-    lazyload.prototype.loadItems = function() {
-
+    lazyload.prototype.loadItems = function(elem) {
+        //懒性加载图片
+        var imgs = elem.getElementsByTagName('img');
+        for(var i = 0 ; i< imgs.length ; i++) {
+            imgs[i].setAttribute('src',imgs[i].getAttribute(this.tag));
+        }
+        //懒性加载textarea
+        var text = elem.getElementsByTagName('textarea');
+        for(var j = 0 ; j< text.length ; j++) {
+            var value = text[j].value;
+            if(window.execScript) {
+                window.execScript(value);
+            }else{
+                new funciton(value)();//???
+            }
+        }
+    }
+    function addEventListener(event,fn) {
+        //谷歌火狐IE9+使用window.addEventListener,Ie678用window.attachEvent否则用window.onevent = fn;
+        window.addEventListener ? this.addEventListener(event,fn) : (window.attachEvent)? this.attachEvent('on'+event,fn) : this['on'+event] = fn;
     }
     //min Query
     function $(elem) {
         var res = [];
         if(document.querySelectorAll) {
             res = document.querySelectorAll(elem);
+            console.log(res);
         }else{
             var styleobj = document.styleSheets[0] || document.createStyleSheet();
             styleobj.addRule(elem , 'Sticket : true');
@@ -51,15 +122,32 @@
                 }
             }
         }
-        if(res.item) {//iE 8
+        if(res) {
             var ret = [];
-            for(var j = 0 ;j < res.item.length ; j++) {
-                ret.push(res.item(i));
+            for(var j = 0 ;j < res.length ; j++) {
+                ret.push(res[j]);
             }
             res = ret;
         }
+        console.log(res);
         return res;
     }
-
+    //umd
+    function umd(name,component) {
+        switch (true) {
+            case  typeof module === 'object' && !!module.exports :
+                module.exports = component;
+                break;
+            case typeof define === 'function' && !!define.amd :
+                define(name,function(){
+                    return component;
+                });
+            default :
+                try {//IE 8
+                    if(typeof execScript == 'object' ) execScript('var '+name);
+                }catch(error){};
+                window[name] = component;
+        }
+    }
 
 })(window);
