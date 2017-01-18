@@ -3,21 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <link href="styles.css" type="text/css" rel="stylesheet"/>
+    <link href="style.css" type="text/css" rel="stylesheet" disabled="disabled"/>
 </head>
-<style>
-    .img-group {
-        margin : 10px auto;
-        width : 80%;
-        height : 150px;
-        border : 1px solid #eee;
-    }
-    .img-group img{
-        display: block;
-        margin: 0 auto;
-        margin-top : 25px;
-        height:100px
-    }
-</style>
 <body>
     <div class="img-group">
         <img src="./placeholder.png" data-src="./sources/1.jpg">
@@ -54,5 +42,45 @@
     setTimeout(function() {
         lzy.restart();
     },1500);
+    /*
+    * 面试问题之切换皮肤 我觉得就是用这么简单粗暴的形式change1()
+    * 然而发现html标签有个特别有用的特性disabled 引入三个皮肤文件样式，通过切换link的disabled达到效果
+    * 泪流满面 原来面试官想让我答这个！！！！！
+    * */
+    //    if(document.addEventListener) {
+//        document.addEventListener('click',change);
+//    }else if(docuemnt.attachEvent) {
+//        docuemnt.attachEvent('click',change);
+//    }else{
+//        window['click'] = change;
+//    }
+//    function change1() {
+//        var link = document.getElementsByTagName('link')[0];
+//        if(link.getAttribute('href') == 'style.css') {
+//            link.setAttribute('href','styles.css');
+//        }else{
+//            link.setAttribute('href','style.css');
+//        }
+//        console.log();
+//    }
+//    function change() {
+//        var link = document.getElementsByTagName('link');
+//        console.log(link);
+//        for(var i = 0, len = link.length; i< len ;i ++) {
+//            if(link[i].getAttribute('disabled')) {
+//                console.log('1',link[i]);
+//                link[i].removeAttribute('disabled');
+//            }else{
+//                console.log('2',link[i]);
+//                link[i].setAttribute('disabled','disabled');
+//            }
+//        }
+//    }
+//    setTimeout(function(){
+//        var link = document.getElementsByTagName('link')[0];
+//        console.log(link.getAttribute('href'));
+//        link.setAttribute('href','style.css');
+//    },3000);
+
 </script>
 </html>

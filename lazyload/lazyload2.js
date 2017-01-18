@@ -135,10 +135,10 @@
     //umd
     function umd(name,component) {
         switch (true) {
-            case  typeof module === 'object' && !!module.exports :
+            case  typeof module === 'object' && !!module.exports ://vuejs等使用es6的import导入
                 module.exports = component;
                 break;
-            case typeof define === 'function' && !!define.amd :
+            case typeof define === 'function' && !!define.amd ://seajs
                 define(name,function(){
                     return component;
                 });
