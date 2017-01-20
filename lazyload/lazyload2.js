@@ -109,9 +109,8 @@
     //min Query
     function $(elem) {
         var res = [];
-        if(document.querySelectorAll) {
+        if(document.querySelectorAll) {//IE8及以上及火狐谷歌 支持这个方法
             res = document.querySelectorAll(elem);
-            console.log(res);
         }else{
             var styleobj = document.styleSheets[0] || document.createStyleSheet();
             styleobj.addRule(elem , 'Sticket : true');
@@ -121,16 +120,23 @@
                     res.push(item);
                 }
             }
+            styleobj.removeRule('Sticket');
         }
-        if(res) {
-            var ret = [];
-            for(var j = 0 ;j < res.length ; j++) {
-                ret.push(res[j]);
-            }
-            res = ret;
-        }
-        console.log(res);
+        res = convertListToArray(res);
         return res;
+    }
+    //将nodelist转化为array
+    function convertListToArray(nodes) {
+        var array = null;
+        try{
+            array = Array.prototype.slice.call(nodes,0);
+        }catch(ex){//IE8以下不支持Array.prototype.slice ，所以使用遍历转化
+            array = new Array();
+            for(var i = 0,len = nodes.length;i < len;i++) {
+                array.push(nodes[i]);
+            }
+        }
+        return array;
     }
     //umd
     function umd(name,component) {
@@ -143,9 +149,9 @@
                     return component;
                 });
             default :
-                try {//IE 8
-                    if(typeof execScript == 'object' ) execScript('var '+name);
-                }catch(error){};
+                //try {//IE 8
+                //    if(typeof execScript == 'object' ) execScript('var '+name);
+                //}catch(error){};
                 window[name] = component;
         }
     }
