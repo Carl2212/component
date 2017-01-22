@@ -27,21 +27,4 @@ div {
   box-shadow: 0 0 5px #51cbee;
   -webkit-box-shadow: 0 0 5px #51cbee;
   -moz-box-shadow: 0 0 5px #51cbee;
-  cursor: zoom-in;
-}
-.model-popimg-box {
-  position: absolute;
-  top: 0;
-  width: 80px;
-  height: 80px;
-  z-index: 999;
-  background: rgba(100, 100, 100, 0.8);
-  cursor: zoom-out;
-  opacity: 0;
-  transition: opacity .5s linear;
-}
-.copychild {
-  width: 80px;
-  height: 80px;
-  transition: all .5s linear;
 }
